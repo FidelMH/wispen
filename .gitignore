@@ -147,3 +147,10 @@ cython_debug/
 # OS
 .DS_Store
 Thumbs.db
+
+# Audio files
+audio/*
+!audio/.gitkeep
+
+# Test audio (keep test files for demos)
+# test_audio/

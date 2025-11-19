@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wispen - Reconnaissance et Synthèse Vocale</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Wispen</h1>
+            <p class="subtitle">Reconnaissance et synthèse vocale avec Azure AI</p>
+        </header>
+
+        <nav class="tabs">
+            <button class="tab-button active" data-tab="recognition">
+                Reconnaissance Vocale
+            </button>
+            <button class="tab-button" data-tab="synthesis">
+                Synthèse Vocale
+            </button>
+        </nav>
+
+        <main>
+            <!-- Onglet Reconnaissance Vocale -->
+            <section id="recognition" class="tab-content active">
+                <div class="card">
+                    <h2>Reconnaissance Vocale</h2>
+                    <p class="description">Enregistrez votre voix et obtenez le texte transcrit</p>
+
+                    <div class="controls">
+                        <button id="startRecord" class="btn btn-primary">
+                            Démarrer l'enregistrement
+                        </button>
+                        <button id="stopRecord" class="btn btn-secondary" disabled>
+                            Arrêter l'enregistrement
+                        </button>
+                    </div>
+
+                    <div class="separator">
+                        <span>OU</span>
+                    </div>
+
+                    <div class="file-upload-section">
+                        <label for="audioFileInput" class="file-label">Choisir un fichier WAV :</label>
+                        <div class="file-controls">
+                            <input type="file" id="audioFileInput" accept=".wav,audio/wav" />
+                            <button id="uploadAudioBtn" class="btn btn-primary" disabled>
+                                Transcrire le fichier
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="status-indicator">
+                        <span id="recordStatus" class="status">Prêt</span>
+                    </div>
+
+                    <div class="text-area-container">
+                        <label for="recognizedText">Texte reconnu :</label>
+                        <textarea id="recognizedText" placeholder="Le texte reconnu apparaîtra ici..." readonly></textarea>
+                    </div>
+
+                    <div class="text-area-container">
+                        <label for="recognizedSummary">Résumé automatique :</label>
+                        <textarea id="recognizedSummary" placeholder="Le résumé apparaîtra ici après la transcription..." readonly></textarea>
+                    </div>
+
+                    <div id="recognitionStats" class="summary-stats" style="display: none;">
+                        <span id="recogOriginalLength"></span>
+                        <span id="recogSummaryLength"></span>
+                    </div>
+
+                    <div class="actions">
+                        <button id="copyRecognized" class="btn btn-outline">
+                            Copier le texte
+                        </button>
+                        <button id="copySummaryRecog" class="btn btn-outline">
+                            Copier le résumé
+                        </button>
+                        <button id="clearRecognized" class="btn btn-outline">
+                            Effacer tout
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Onglet Synthèse Vocale -->
+            <section id="synthesis" class="tab-content">
+                <div class="card">
+                    <h2>Synthèse Vocale</h2>
+                    <p class="description">Saisissez du texte et générez un fichier WAV</p>
+
+                    <div class="text-area-container">
+                        <label for="textToSynthesize">Texte à synthétiser :</label>
+                        <textarea id="textToSynthesize" placeholder="Saisissez le texte à convertir en audio..."></textarea>
+                    </div>
+
+                    <div class="controls">
+                        <button id="synthesizeBtn" class="btn btn-primary">
+                            Générer et télécharger le fichier WAV
+                        </button>
+                    </div>
+
+                    <div class="status-indicator">
+                        <span id="synthesisStatus" class="status">Prêt</span>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <footer>
+            <p>Wispen - Propulsé par Azure AI Speech & Language</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,366 @@
+/* Reset et variables */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #4A90E2;
+    --primary-hover: #357ABD;
+    --secondary-color: #6C757D;
+    --success-color: #28A745;
+    --danger-color: #DC3545;
+    --background: #F8F9FA;
+    --card-background: #FFFFFF;
+    --text-color: #212529;
+    --text-muted: #6C757D;
+    --border-color: #DEE2E6;
+    --shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --shadow-hover: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: var(--background);
+    color: var(--text-color);
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+/* Container principal */
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Header */
+header {
+    text-align: center;
+    padding: 40px 20px;
+    margin-bottom: 30px;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+}
+
+/* Navigation par onglets */
+.tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.tab-button {
+    flex: 1;
+    padding: 15px 20px;
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    color: var(--text-muted);
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.tab-button:hover {
+    color: var(--primary-color);
+    background: rgba(74, 144, 226, 0.05);
+}
+
+.tab-button.active {
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
+}
+
+/* Contenu des onglets */
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Cartes */
+.card {
+    background: var(--card-background);
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: var(--shadow);
+}
+
+.card h2 {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+    color: var(--text-color);
+}
+
+.description {
+    color: var(--text-muted);
+    margin-bottom: 25px;
+}
+
+/* Boutons */
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.btn-primary {
+    background: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background: var(--primary-hover);
+    box-shadow: var(--shadow-hover);
+}
+
+.btn-secondary {
+    background: var(--secondary-color);
+    color: white;
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background: #5A6268;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+}
+
+.btn-outline:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Contrôles */
+.controls {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+/* Séparateur */
+.separator {
+    text-align: center;
+    margin: 20px 0;
+    position: relative;
+}
+
+.separator::before,
+.separator::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 40%;
+    height: 1px;
+    background: var(--border-color);
+}
+
+.separator::before {
+    left: 0;
+}
+
+.separator::after {
+    right: 0;
+}
+
+.separator span {
+    display: inline-block;
+    padding: 0 15px;
+    background: var(--card-background);
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+/* Upload de fichier */
+.file-upload-section {
+    margin-bottom: 20px;
+}
+
+.file-label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.file-controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+#audioFileInput {
+    flex: 1;
+    min-width: 200px;
+    padding: 10px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--background);
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+#audioFileInput:hover {
+    border-color: var(--primary-color);
+}
+
+#audioFileInput:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+/* Indicateur de statut */
+.status-indicator {
+    margin-bottom: 20px;
+    padding: 12px;
+    background: var(--background);
+    border-radius: 8px;
+    text-align: center;
+}
+
+.status {
+    font-weight: 500;
+}
+
+.status.recording {
+    color: var(--danger-color);
+}
+
+.status.processing {
+    color: var(--primary-color);
+}
+
+.status.success {
+    color: var(--success-color);
+}
+
+/* Zone de texte */
+.text-area-container {
+    margin-bottom: 20px;
+}
+
+.text-area-container label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+textarea {
+    width: 100%;
+    min-height: 150px;
+    padding: 15px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 1rem;
+    resize: vertical;
+    transition: border-color 0.3s ease;
+}
+
+textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+/* Actions */
+.actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* Statistiques du résumé */
+.summary-stats {
+    margin-top: 15px;
+    padding: 15px;
+    background: var(--background);
+    border-radius: 8px;
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.summary-stats span {
+    font-size: 0.9rem;
+    color: var(--text-color);
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 30px 20px;
+    margin-top: 50px;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+
+    header h1 {
+        font-size: 2rem;
+    }
+
+    .card {
+        padding: 20px;
+    }
+
+    .controls {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+    }
+
+    .actions {
+        flex-direction: column;
+    }
+}
