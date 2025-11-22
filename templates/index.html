@@ -52,6 +52,22 @@
                         </div>
                     </div>
 
+                    <div class="test-audio-section">
+                        <label for="testAudioSelect" class="file-label">Fichiers de test disponibles :</label>
+                        <div class="test-audio-controls">
+                            <select id="testAudioSelect" class="test-audio-select">
+                                <option value="">-- Sélectionner un fichier de test --</option>
+                            </select>
+                            <button id="transcribeTestAudioBtn" class="btn btn-primary" disabled>
+                                Transcrire le fichier de test
+                            </button>
+                        </div>
+                        <div id="testAudioInfo" class="test-audio-info" style="display: none;">
+                            <span id="testAudioTheme"></span>
+                            <span id="testAudioSize"></span>
+                        </div>
+                    </div>
+
                     <div class="status-indicator">
                         <span id="recordStatus" class="status">Prêt</span>
                     </div>

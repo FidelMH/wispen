@@ -251,6 +251,59 @@ header h1 {
     border-color: var(--primary-color);
 }
 
+/* Section fichiers de test */
+.test-audio-section {
+    margin-bottom: 20px;
+    padding-top: 15px;
+    border-top: 1px solid var(--border-color);
+}
+
+.test-audio-controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.test-audio-select {
+    flex: 1;
+    min-width: 200px;
+    padding: 10px 15px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--background);
+    color: var(--text-color);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+.test-audio-select:hover {
+    border-color: var(--primary-color);
+}
+
+.test-audio-select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.test-audio-info {
+    margin-top: 10px;
+    padding: 10px 15px;
+    background: var(--background);
+    border-radius: 8px;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    border-left: 3px solid var(--primary-color);
+}
+
+.test-audio-info span {
+    font-size: 0.9rem;
+    color: var(--text-color);
+    font-weight: 500;
+}
+
 /* Indicateur de statut */
 .status-indicator {
     margin-bottom: 20px;

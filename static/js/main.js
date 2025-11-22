@@ -39,6 +39,8 @@ function initializeRecognition() {
     const clearBtn = document.getElementById('clearRecognized');
     const fileInput = document.getElementById('audioFileInput');
     const uploadBtn = document.getElementById('uploadAudioBtn');
+    const testAudioSelect = document.getElementById('testAudioSelect');
+    const transcribeTestBtn = document.getElementById('transcribeTestAudioBtn');
 
     startBtn.addEventListener('click', startRecording);
     stopBtn.addEventListener('click', stopRecording);
@@ -52,6 +54,15 @@ function initializeRecognition() {
     });
 
     uploadBtn.addEventListener('click', uploadAudioFile);
+
+    // Charger les fichiers de test disponibles
+    loadTestAudioFiles();
+
+    // Gérer la sélection d'un fichier de test
+    testAudioSelect.addEventListener('change', handleTestAudioSelection);
+
+    // Gérer le clic sur le bouton de transcription des fichiers de test
+    transcribeTestBtn.addEventListener('click', transcribeTestAudio);
 }
 
 async function startRecording() {
@@ -306,6 +317,129 @@ async function uploadAudioFile() {
         statusEl.className = 'status';
     } finally {
         uploadBtn.disabled = false;
+
+        // Réinitialiser le statut après 3 secondes
+        setTimeout(() => {
+            if (statusEl.className === 'status success' || statusEl.className === 'status') {
+                statusEl.textContent = 'Prêt';
+                statusEl.className = 'status';
+            }
+        }, 3000);
+    }
+}
+
+async function loadTestAudioFiles() {
+    const testAudioSelect = document.getElementById('testAudioSelect');
+    const statusEl = document.getElementById('recordStatus');
+
+    try {
+        const response = await fetch('/api/test-audio-files');
+        const data = await response.json();
+
+        if (response.ok && data.files && data.files.length > 0) {
+            // Vider le select (sauf la première option)
+            testAudioSelect.innerHTML = '<option value="">-- Sélectionner un fichier de test --</option>';
+
+            // Ajouter les fichiers de test
+            data.files.forEach(file => {
+                const option = document.createElement('option');
+                option.value = file.filename;
+                option.textContent = `${file.theme} (${file.size_formatted})`;
+                option.dataset.theme = file.theme;
+                option.dataset.size = file.size_formatted;
+                testAudioSelect.appendChild(option);
+            });
+        } else {
+            console.log('Aucun fichier de test disponible');
+        }
+    } catch (error) {
+        console.error('Erreur lors du chargement des fichiers de test:', error);
+    }
+}
+
+function handleTestAudioSelection() {
+    const testAudioSelect = document.getElementById('testAudioSelect');
+    const transcribeTestBtn = document.getElementById('transcribeTestAudioBtn');
+    const testAudioInfo = document.getElementById('testAudioInfo');
+    const testAudioTheme = document.getElementById('testAudioTheme');
+    const testAudioSize = document.getElementById('testAudioSize');
+
+    const selectedOption = testAudioSelect.options[testAudioSelect.selectedIndex];
+
+    if (selectedOption.value) {
+        // Activer le bouton de transcription
+        transcribeTestBtn.disabled = false;
+
+        // Afficher les informations du fichier
+        testAudioTheme.textContent = `Thème : ${selectedOption.dataset.theme}`;
+        testAudioSize.textContent = `Taille : ${selectedOption.dataset.size}`;
+        testAudioInfo.style.display = 'flex';
+    } else {
+        // Désactiver le bouton et masquer les infos
+        transcribeTestBtn.disabled = true;
+        testAudioInfo.style.display = 'none';
+    }
+}
+
+async function transcribeTestAudio() {
+    const testAudioSelect = document.getElementById('testAudioSelect');
+    const transcribeTestBtn = document.getElementById('transcribeTestAudioBtn');
+    const statusEl = document.getElementById('recordStatus');
+    const textArea = document.getElementById('recognizedText');
+
+    const filename = testAudioSelect.value;
+
+    if (!filename) {
+        statusEl.textContent = 'Veuillez sélectionner un fichier de test';
+        statusEl.className = 'status';
+        return;
+    }
+
+    transcribeTestBtn.disabled = true;
+    statusEl.textContent = 'Chargement du fichier de test...';
+    statusEl.className = 'status processing';
+
+    try {
+        // Récupérer le fichier de test depuis le serveur
+        const fileResponse = await fetch(`/api/test-audio/${filename}`);
+
+        if (!fileResponse.ok) {
+            throw new Error('Impossible de charger le fichier de test');
+        }
+
+        const audioBlob = await fileResponse.blob();
+
+        // Envoyer le fichier à l'API de reconnaissance
+        statusEl.textContent = 'Traitement en cours...';
+
+        const formData = new FormData();
+        formData.append('audio', audioBlob, filename);
+
+        const recognizeResponse = await fetch('/api/recognize', {
+            method: 'POST',
+            body: formData
+        });
+
+        const data = await recognizeResponse.json();
+
+        if (recognizeResponse.ok) {
+            textArea.value = data.text;
+            statusEl.textContent = 'Reconnaissance réussie';
+            statusEl.className = 'status success';
+
+            // Générer automatiquement le résumé
+            await generateSummaryForRecognition(data.text);
+        } else {
+            statusEl.textContent = `Erreur: ${data.error}`;
+            statusEl.className = 'status';
+        }
+
+    } catch (error) {
+        console.error('Erreur lors de la transcription du fichier de test:', error);
+        statusEl.textContent = 'Erreur lors du traitement du fichier de test';
+        statusEl.className = 'status';
+    } finally {
+        transcribeTestBtn.disabled = false;
 
         // Réinitialiser le statut après 3 secondes
         setTimeout(() => {

@@ -28,6 +28,9 @@ AUDIO_FOLDER = 'audio'
 if not os.path.exists(AUDIO_FOLDER):
     os.makedirs(AUDIO_FOLDER)
 
+# Dossier des fichiers de test audio
+TEST_AUDIO_FOLDER = 'test_audio'
+
 
 @app.route('/')
 def index():
@@ -223,6 +226,76 @@ def summarize():
         import traceback
         traceback.print_exc()
         return jsonify({'error': f'{type(e).__name__}: {str(e)}'}), 500
+
+
+@app.route('/api/test-audio-files', methods=['GET'])
+def get_test_audio_files():
+    """
+    API pour lister les fichiers audio de test disponibles
+    Retourne une liste de fichiers avec leurs métadonnées
+    """
+    try:
+        if not os.path.exists(TEST_AUDIO_FOLDER):
+            return jsonify({'error': 'Dossier test_audio introuvable'}), 404
+
+        # Mapping des noms de fichiers vers leurs thèmes
+        file_themes = {
+            'test_intelligence_artificielle.wav': 'Intelligence Artificielle',
+            'test_environnement.wav': 'Environnement',
+            'test_technologie.wav': 'Technologie',
+            'test_education.wav': 'Éducation',
+            'test_sante.wav': 'Santé'
+        }
+
+        files_info = []
+        for filename in os.listdir(TEST_AUDIO_FOLDER):
+            if filename.endswith('.wav'):
+                file_path = os.path.join(TEST_AUDIO_FOLDER, filename)
+                file_size = os.path.getsize(file_path)
+
+                # Convertir la taille en format lisible (KB, MB)
+                if file_size < 1024:
+                    size_str = f"{file_size} B"
+                elif file_size < 1024 * 1024:
+                    size_str = f"{file_size / 1024:.1f} KB"
+                else:
+                    size_str = f"{file_size / (1024 * 1024):.1f} MB"
+
+                files_info.append({
+                    'filename': filename,
+                    'theme': file_themes.get(filename, 'Audio de test'),
+                    'size': file_size,
+                    'size_formatted': size_str
+                })
+
+        # Trier par nom de fichier
+        files_info.sort(key=lambda x: x['filename'])
+
+        return jsonify({'files': files_info})
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/test-audio/<filename>', methods=['GET'])
+def get_test_audio_file(filename):
+    """
+    API pour récupérer un fichier audio de test spécifique
+    """
+    try:
+        # Sécurité : vérifier que le nom de fichier ne contient pas de caractères dangereux
+        if '..' in filename or '/' in filename or '\\' in filename:
+            return jsonify({'error': 'Nom de fichier invalide'}), 400
+
+        file_path = os.path.join(TEST_AUDIO_FOLDER, filename)
+
+        if not os.path.exists(file_path):
+            return jsonify({'error': 'Fichier introuvable'}), 404
+
+        return send_file(file_path, mimetype='audio/wav')
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 
 if __name__ == '__main__':
